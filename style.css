@@ -1,0 +1,151 @@
+body {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: aliceblue;
+}
+
+.main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.social-media-app {
+    display: flex;
+    flex-direction: column;
+    width: 40rem;
+    background-color: #000062;
+    height: auto;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding: 1rem 0 3rem 0;
+    border-radius: 6px;
+    color:aliceblue;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+.form label {
+    font-weight: 700;
+    font-size: 1.2rem;
+}
+
+.left, .right {
+    background-color: aliceblue;
+    padding: 1rem;
+    border-radius: 6px;
+    color: #000062;
+    align-self: stretch;
+}
+
+.left {
+    display: flex;
+    flex-direction: column;
+    align-content: stretch;
+    flex-wrap: wrap;
+}
+
+.right {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.sections {
+    display: flex;
+    gap: 5rem;
+    justify-content: center;
+    align-items: flex-start;
+    width: 100%;
+}
+
+h1 {
+    padding-left: 2rem;
+}
+
+h2 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-top: 0;
+}
+
+#post-btn {
+    border-radius: 6px;
+    border: none;
+    align-self: center;
+    background-color: #000062;  
+    color: aliceblue;
+    padding: 0.4rem 0;
+    align-self: stretch;
+    font-weight: 600;
+    letter-spacing: 1px;
+    transition: transform 0.3s ease;
+}
+
+#post-btn:hover {
+    background-color: black;
+    transform: scale(1.1);
+}
+
+.form textarea {
+    border: none;
+    border-radius: 6px;
+} 
+
+.options i {
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 10px
+}
+
+.red::before {
+    content: "Post can't be blank";
+}
+.green::before {
+    content: "Success";
+}
+
+.red {
+    background-color:#ff4545;
+    border-radius: 6px;
+    color: aliceblue;
+    padding: 0.3rem;
+    align-self: stretch;
+    text-align: center;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 2px;
+}
+
+.green {
+    background-color:#45ff45;
+    border-radius: 6px;
+    color: #000062;
+    padding: 0.3rem;
+    text-align: center;
+    align-self: stretch;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 2px;
+}
+
+.pagination {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+/* :only-child pseudo class targets child when it is the only child of its parent */
+.pagination i.fa-chevron-right:only-child {
+    margin-left: auto;
+}
