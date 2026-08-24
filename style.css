@@ -71,6 +71,7 @@ body {
     justify-content: space-between;
     align-items: flex-start;
     width: 100%;
+    gap: 1rem;
 }
 
 h2 {
