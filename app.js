@@ -2,25 +2,43 @@ let form = document.querySelector('.form');
 let input = document.querySelector('#input');
 let msg = document.querySelector('.form-message');
 let posts = document.querySelector('#posts');
+let title = document.querySelector('#title');
+// display post on click
+let postDisplay = document.querySelector('.post-display');
+let editor = document.querySelector('.social-media-app');
+let closeBtn = document.querySelector('#close');
 
 // querySelector # & . needed to select them but not needed for general html tags
 // querySelectorAll returns a list which needs a loop to listen to events of all elements
 
+// array to hold all posts
+let allPosts = [];
+
+// keep track of edits
+let editedPost = null;
+
+// track element being edited, null if creating a new one
+let selectedTitle = null;
+let selectedPost = null;
+
 form.addEventListener("submit", (e) => {
     e.preventDefault(); //prevents the page from reloading on submit
     console.log("clicked");
-    formValidation();
+    formValidation(e);
 });
 
-let formValidation = () => {
+let formValidation = (e) => {
     // trim: removes extra space at end or start, prevent empty posts
-    if (input.value.trim() === "") {
+    if (title.value.trim() === "") {
+        msg.classList.remove("red", "green");
         msg.classList.add("red");
         console.log("failure");
     }
     else {
-        acceptData();
+        msg.classList.remove("red", "green");
+        acceptData(e);
         msg.classList.add("green");
+        title.value = "";
         input.value = "";
         console.log("success");
     }
@@ -29,17 +47,60 @@ let formValidation = () => {
 // object to accept form input data
 let data = {};
 
-let acceptData = () => {
+let acceptData = (e) => {
     // find text key in data obj/array & change its value
-    data["text"] = input.value;
-    createPosts();
+    // data["text"] = input.value;
+    data = Object.fromEntries(new FormData(e.target));
+
+    if (selectedPost || selectedTitle) {
+        updatePosts();
+    }
+    else {
+        createPosts();
+        allPosts.push(data);
+        // convert obj/array into a json string
+        localStorage.setItem("allPosts", JSON.stringify(allPosts));
+    }
     console.log(data);
 };
 
+// load posts
+let loadPosts = () => {
+    // convert raw string to a js data type
+    allPosts = JSON.parse(localStorage.getItem("allPosts")) || [];
+
+    // render the posts
+    allPosts.forEach((savedPost, index) => {
+        data = savedPost;
+        createPosts(savedPost, index);
+    });
+}
+
+// update posts
+let updatePosts = () => {
+    selectedTitle.innerText = data.title;
+    selectedPost.innerText = data.text;
+    // update the array item at the index
+    if (editedPost !== null) {
+        // overwrite old data with new data
+        allPosts[editedPost] = data;
+        localStorage.setItem("allPosts", JSON.stringify(allPosts));
+        editedPost = null;
+    }
+
+    // reset
+    selectedTitle = null;
+    selectedPost = null;
+    // rest button
+    form.querySelector("#post-btn").textContent = "Post";
+    console.log("Post Updated");
+}
+
 // create posts
-let createPosts = () => {
+let createPosts = (savedPost, index) => {
     // create post div
     let postDiv = document.createElement("div");
+    let postTitle = document.createElement("p");
     let postText = document.createElement("p");
     let postSpan = document.createElement("span");
     let edit = document.createElement("i");
@@ -49,14 +110,35 @@ let createPosts = () => {
     postSpan.className = "options";
     edit.className = "fa-regular fa-pen-to-square";
     del.className = "fa-solid fa-trash";
+    postTitle.className = "line-clamp-title";
+
+    postTitle.style.cursor = "pointer";
 
     // set text with data property, 
+    postTitle.innerText = data.title;
     postText.innerText = data.text;
+    postText.style.display = "none";
+
+    // display post on title click
+    postTitle.addEventListener("click", () => {
+        postDisplay.querySelector('h2').innerText = postTitle.innerText;
+        postDisplay.querySelector('p').innerText = postText.innerText;
+
+        editor.classList.add('hide');
+        postDisplay.classList.add('show');
+    });
+
+    closeBtn.addEventListener("click", () => {
+        editor.classList.remove('hide');
+        postDisplay.classList.remove('show');
+    });
 
     // delete post
     del.addEventListener("click", () => {
-        postDiv.remove();
-
+        // array method
+        // (position of current element, amount to modify/delete)
+        allPosts.splice(index, 1);
+        localStorage.setItem("allPosts", JSON.stringify(allPosts));
         let remainingPosts = posts.children.length;
         // 2 > 1 && 2 <= (2 - 1) * 2 -> 1 * 2 = 3 -->> 2 > 1 && 2 <= 3 (3 is boundary) --->>> T && T
         if(currentPage > 1 && remainingPosts <= (currentPage - 1) * 2) {
@@ -64,14 +146,25 @@ let createPosts = () => {
         }
         handlePagination();
 
+        posts.replaceChildren();
+        loadPosts();
+
         console.log("deleted");
     });
 
     // edit post
     edit.addEventListener("click", () => {
         // sends post text back to the textarea
+        title.value = postTitle.innerText;
         input.value = postText.innerText;
-        postDiv.remove();
+        
+        selectedTitle = postTitle;
+        selectedPost = postText;
+
+        form.querySelector("#post-btn").textContent = "Update";
+
+        // store position of post in array
+        editedPost = index;
 
         let remainingPosts = posts.children.length;
         if(currentPage > 1 && remainingPosts <= (currentPage - 1) * 2) {
@@ -79,12 +172,12 @@ let createPosts = () => {
         }
         handlePagination();
 
-        console.log("edited");
+        console.log("editing");
     });
 
     // set up elements hierarchy
     postSpan.append(edit, del);
-    postDiv.append(postText, postSpan);
+    postDiv.append(postTitle, postText, postSpan);
 
     // push post to main container
     posts.append(postDiv);
@@ -101,6 +194,11 @@ let createPosts = () => {
 };
 
 input.addEventListener("click", () => {
+    msg.classList.remove("red");
+    msg.classList.remove("green");
+});
+
+window.addEventListener("click", () => {
     msg.classList.remove("red");
     msg.classList.remove("green");
 });
@@ -166,6 +264,26 @@ let handlePagination = () => {
         container.append(prevBtn);
     }
 
+    // render numbers
+    let postsAllowed = 2;
+    let totalPages = Math.ceil(totalPosts / postsAllowed);
+    let numsDiv = document.createElement("div");
+    numsDiv.classList.add("nums");
+    container.append(numsDiv);
+
+    for (let i = 1; i <= totalPages; i++) {
+    let pageBtn = document.createElement("span");
+    pageBtn.innerText = i; // Sets button text to 1 2 3
+
+    pageBtn.onclick = () => {
+        currentPage = i; // Update the current active page
+        handlePagination();
+    };
+
+    numsDiv.append(pageBtn);
+
+    }
+
     if (hasNextPage) {
         let nextBtn = document.createElement("i");
         nextBtn.className = "fa-solid fa-chevron-right";
@@ -182,3 +300,5 @@ let handlePagination = () => {
 
 // load when window loads
 handlePagination();
+
+loadPosts();

@@ -2,7 +2,7 @@ body {
     padding: 0;
     margin: 0;
     box-sizing: border-box;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: Helvetica, sans-serif;
     background-color: aliceblue;
 }
 
@@ -16,14 +16,17 @@ body {
 .social-media-app {
     display: flex;
     flex-direction: column;
-    width: 40rem;
+    width: 70%;
     background-color: #000062;
-    height: auto;
+    height: 25rem;
     justify-content: flex-start;
     align-items: flex-start;
-    padding: 1rem 0 3rem 0;
+    padding: 1rem 2rem 1rem 2rem;
     border-radius: 6px;
     color:aliceblue;
+    box-shadow: 10px 12px 12px lightgrey;
+    gap: 2rem;
+    max-width: 900px;
 }
 
 .form {
@@ -31,7 +34,8 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
-    gap: 20px;
+    gap: 10px;
+    width: 15rem;
 }
 
 .form label {
@@ -45,6 +49,7 @@ body {
     border-radius: 6px;
     color: #000062;
     align-self: stretch;
+    height: auto;
 }
 
 .left {
@@ -58,18 +63,14 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    width: 30rem;
 }
 
 .sections {
     display: flex;
-    gap: 5rem;
-    justify-content: center;
+    justify-content: space-between;
     align-items: flex-start;
     width: 100%;
-}
-
-h1 {
-    padding-left: 2rem;
 }
 
 h2 {
@@ -78,20 +79,20 @@ h2 {
     margin-top: 0;
 }
 
-#post-btn {
+.btn {
     border-radius: 6px;
     border: none;
     align-self: center;
     background-color: #000062;  
     color: aliceblue;
-    padding: 0.4rem 0;
+    padding: 0.4rem 2rem;
     align-self: stretch;
     font-weight: 600;
     letter-spacing: 1px;
     transition: transform 0.3s ease;
 }
 
-#post-btn:hover {
+.btn:hover {
     background-color: black;
     transform: scale(1.1);
 }
@@ -99,6 +100,7 @@ h2 {
 .form textarea {
     border: none;
     border-radius: 6px;
+    min-width: 100%;
 } 
 
 .options i {
@@ -108,7 +110,7 @@ h2 {
 }
 
 .red::before {
-    content: "Post can't be blank";
+    content: "Title can't be blank";
 }
 .green::before {
     content: "Success";
@@ -140,12 +142,118 @@ h2 {
 
 .pagination {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     width: 100%;
+    position: relative;
 }
 
 /* :only-child pseudo class targets child when it is the only child of its parent */
-.pagination i.fa-chevron-right:only-child {
+.pagination i.fa-chevron-right {
     margin-left: auto;
+}
+
+.pagination i.fa-chevron-left {
+    margin-right: auto;
+}
+
+.nums {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%); /* center of element shift to true center */
+    display: flex;
+    gap: 5px;
+    cursor: pointer;
+}
+
+#title {
+    border: none;
+    border-radius: 6px;
+    min-width: 102%;
+    letter-spacing: 0.5px;
+    font-size: 0.8rem;
+    padding: 0.5rem 0;
+}
+
+#title::placeholder {
+    padding-left: 0.5rem;
+}
+
+.post-display {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    background-color: #1818ad;
+    color: aliceblue;
+    width: 100%;
+    height: auto;
+    display: none;
+    max-width: 600px;
+    min-height: 300px;
+    padding: 1rem;
+    border-radius: 6px;
+    box-shadow: 10px 12px 12px 10px #afafd8;
+}
+
+.post-display.show {
+    display: flex;
+}
+
+.social-media-app.hide {
+    display: none;
+}
+
+#close {
+    width: 30%;
+    margin: auto;
+}
+
+.line-clamp-title {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* max-width: <=
+    min-width: >= */
+
+@media screen and (max-width: 1028px) {
+    .social-media-app {
+        width: 80%
+    }
+}
+
+@media screen and (max-width: 770px) {
+    .sections {
+        gap: 1rem;
+    }
+}
+
+@media screen and (max-width: 430px) {
+    .post-display {
+        max-width: 85%;
+    }
+    .social-media-app {
+        max-width: 100%;
+        height: auto;
+        padding: 2rem;
+    }
+    .sections {
+        flex-direction: column;
+        gap: 2rem;
+    }
+    .right {
+        width: auto;
+        min-height: 250px;
+    }
+    .post-display {
+        width: 100%;
+        min-width: 0;
+    }
+    #close {
+        width: 50%;
+    }
 }

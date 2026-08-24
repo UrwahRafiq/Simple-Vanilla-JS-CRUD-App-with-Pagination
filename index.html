@@ -14,11 +14,12 @@
             <h1>Social Media App</h1>
             <div class="sections">
                 <div class="left">
-                    <form class="form">
+                    <form class="form" novalidate>
                         <label for="input">Write your post here</label>
-                        <textarea id="input" cols="25" rows="3" placeholder="Type content here"></textarea>
+                        <input type="text" required placeholder="Type your heading" id="title" name="title">
+                        <textarea name="text" id="input" cols="30" rows="5" placeholder="Type content here"></textarea>
                         <div class="form-message"></div>
-                        <button id="post-btn" type="submit">Post</button>
+                        <button id="post-btn" type="submit" class="btn">Post</button>
                     </form>
                 </div>
                 <div class="right">
@@ -29,6 +30,11 @@
                     <div class="pagination"></div>
                 </div>
             </div>
+        </div>
+        <div class="post-display">
+            <h2></h2>
+            <p></p>
+            <button id="close" class="btn">Close</button>
         </div>
     </div>
 </body>
